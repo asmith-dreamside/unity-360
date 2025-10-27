@@ -127,10 +127,58 @@ public class ObjectDetailPoint : MonoBehaviour
         }
     }
     
-    void OnMouseDown()
+    void Update()
     {
-        if (!isInspectable) return;
-        Select();
+        if (!isInspectable || sphereCollider == null) return;
+        
+        Camera mainCamera = Camera.main;
+        if (mainCamera == null)
+        {
+            mainCamera = FindObjectOfType<Camera>();
+            if (mainCamera == null) return;
+        }
+        
+        // Detección de interacción unificada para todas las plataformas
+        bool interact = false;
+        Vector2 inputPosition = Vector2.zero;
+        bool hasInputEvent = false;
+        
+        // Verificar touch input primero (móviles)
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            if (touch.phase == TouchPhase.Began)
+            {
+                inputPosition = touch.position;
+                hasInputEvent = true;
+            }
+        }
+        // Si no hay touch, usar mouse (PC, WebGL)
+        else if (Input.GetMouseButtonDown(0))
+        {
+            inputPosition = Input.mousePosition;
+            hasInputEvent = true;
+        }
+        
+        // Procesar el input si lo hay
+        if (hasInputEvent)
+        {
+            Ray ray = mainCamera.ScreenPointToRay(inputPosition);
+            RaycastHit hit;
+            
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.collider == sphereCollider)
+                {
+                    interact = true;
+                }
+            }
+        }
+        
+        if (interact)
+        {
+            Select();
+        }
     }
     
     void OnMouseEnter()

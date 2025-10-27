@@ -21,7 +21,7 @@ public class TeleportDestination : MonoBehaviour
             var sala = salaTarget.GetComponent<Sala>();
             if (sala != null)
             {
-                var locationPanelController = FindFirstObjectByType<CurrentLocationPanelController>();
+                var locationPanelController = FindObjectOfType<CurrentLocationPanelController>();
                 if (locationPanelController != null)
                     locationPanelController.SetLocation(sala.salaName);
             }

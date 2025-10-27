@@ -29,7 +29,7 @@ public class PartDetailPanelController : MonoBehaviour
         if (panelManager != null)
         {
             // Buscar el punto actualmente seleccionado y deseleccionarlo
-            var allPoints = FindObjectsByType<ObjectDetailPoint>(FindObjectsSortMode.None);
+            var allPoints = FindObjectsOfType<ObjectDetailPoint>();
             foreach (var point in allPoints)
             {
                 // Usamos el método deselect que hemos creado

@@ -25,14 +25,24 @@ public class ObjectInspector : MonoBehaviour
 
     void Start()
     {
+        // Buscar la cámara principal de forma más robusta
         mainCamera = Camera.main;
+        if (mainCamera == null)
+        {
+            mainCamera = FindObjectOfType<Camera>();
+            if (mainCamera == null)
+            {
+                Debug.LogError("[ObjectInspector] No se encontró ninguna cámara en la escena!");
+            }
+        }
+        
         // Obtener todos los puntos de detalle del objeto
         detailPoints = GetComponentsInChildren<ObjectDetailPoint>();
         
         // Buscar el PanelManager si no está asignado
         if (panelManager == null)
         {
-            panelManager = FindAnyObjectByType<PanelManager>();
+            panelManager = FindObjectOfType<PanelManager>();
             if (panelManager == null)
             {
                 Debug.LogError("[ObjectInspector] No se encontró ningún PanelManager en la escena. Por favor, asegúrate de que existe un objeto con el componente PanelManager.");
@@ -89,15 +99,18 @@ public class ObjectInspector : MonoBehaviour
         transform.rotation = Quaternion.Euler(originalRotation.eulerAngles.x, lookRotation.eulerAngles.y, originalRotation.eulerAngles.z);
         
         // Mostrar los números de los puntos de detalle
-        foreach (var point in detailPoints)
+        if (detailPoints != null)
         {
-            if (point != null)
+            foreach (var point in detailPoints)
             {
-                point.ShowPoint(true);
-            }
-            else
-            {
-                Debug.LogError("[ObjectInspector] ¡Se encontró un punto de detalle null!");
+                if (point != null && point.gameObject != null)
+                {
+                    point.ShowPoint(true);
+                }
+                else
+                {
+                    Debug.LogError("[ObjectInspector] ¡Se encontró un punto de detalle null!");
+                }
             }
         }
         
@@ -105,7 +118,7 @@ public class ObjectInspector : MonoBehaviour
         if (panelManager != null)
         {
             panelManager.ShowObjectPanel();
-            var objPanel = FindFirstObjectByType<ObjectPanelController>();
+            var objPanel = FindObjectOfType<ObjectPanelController>();
             if (objPanel != null)
             {
                 objPanel.SetObject(this);
@@ -125,23 +138,53 @@ public class ObjectInspector : MonoBehaviour
     {
         if (!inspecting) return;
 
-        // Rotar el objeto solo con el click izquierdo
-        if (Input.GetMouseButtonDown(0))
+        // Sistema unificado para todas las plataformas
+        bool hasInput = false;
+        Vector3 inputDelta = Vector3.zero;
+        
+        // Verificar input táctil primero (móviles, tablets)
+        if (Input.touchCount > 0)
         {
-            previousMousePosition = Input.mousePosition;
+            Touch touch = Input.GetTouch(0);
+            if (touch.phase == TouchPhase.Began)
+            {
+                previousMousePosition = touch.position;
+            }
+            if (touch.phase == TouchPhase.Moved)
+            {
+                inputDelta = (Vector3)touch.position - previousMousePosition;
+                previousMousePosition = touch.position;
+                hasInput = true;
+            }
         }
-        if (Input.GetMouseButton(0))
+        // Si no hay touch, usar mouse (PC, WebGL)
+        else if (Input.GetMouseButton(0))
         {
-            Vector3 deltaMousePosition = Input.mousePosition - previousMousePosition;
-            float rotationX = deltaMousePosition.y * rotationSpeed * Time.deltaTime;
-            float rotationY = -deltaMousePosition.x * rotationSpeed * Time.deltaTime;
+            if (Input.GetMouseButtonDown(0))
+            {
+                previousMousePosition = Input.mousePosition;
+            }
+            
+            inputDelta = Input.mousePosition - previousMousePosition;
+            previousMousePosition = Input.mousePosition;
+            
+            // Solo considerar como input válido si hay movimiento significativo
+            if (inputDelta.magnitude > 1f)
+            {
+                hasInput = true;
+            }
+        }
+        
+        // Aplicar rotación si hay input válido
+        if (hasInput && inputDelta.magnitude > 0.1f)
+        {
+            float rotationX = inputDelta.y * rotationSpeed * Time.deltaTime;
+            float rotationY = -inputDelta.x * rotationSpeed * Time.deltaTime;
             
             // Crear la rotación alrededor del pivote
             Vector3 pivotWorldPos = transform.TransformPoint(pivotPoint.localPosition);
             transform.RotateAround(pivotWorldPos, transform.right, rotationX);
             transform.RotateAround(pivotWorldPos, Vector3.up, rotationY);
-            
-            previousMousePosition = Input.mousePosition;
         }
 
         // El modo inspección solo termina con el botón 'Atrás' en la UI
@@ -155,11 +198,14 @@ public class ObjectInspector : MonoBehaviour
         
         // Ocultar los números de los puntos de detalle
         // ShowPoint ya incluye lógica para deseleccionar puntos si es necesario
-        foreach (var point in detailPoints)
+        if (detailPoints != null)
         {
-            if (point != null)
+            foreach (var point in detailPoints)
             {
-                point.ShowPoint(false);
+                if (point != null && point.gameObject != null)
+                {
+                    point.ShowPoint(false);
+                }
             }
         }
         

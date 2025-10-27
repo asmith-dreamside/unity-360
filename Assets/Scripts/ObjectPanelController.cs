@@ -39,6 +39,10 @@ public class ObjectPanelController : MonoBehaviour
         if (objectImage != null)
             objectImage.texture = inspector.objectImage;
         // Mostrar panel solo si hay objeto
+        if (panelManager == null)
+        {
+            panelManager = FindObjectOfType<PanelManager>();
+        }
         if (panelManager != null)
             panelManager.ShowObjectPanel();
     }
@@ -54,6 +58,10 @@ public class ObjectPanelController : MonoBehaviour
         if (objectImage != null)
             objectImage.texture = null; // Sin imagen disponible en ObjectID
         // Mostrar panel de objeto
+        if (panelManager == null)
+        {
+            panelManager = FindObjectOfType<PanelManager>();
+        }
         if (panelManager != null)
             panelManager.ShowObjectPanel();
     }
@@ -63,7 +71,7 @@ public class ObjectPanelController : MonoBehaviour
     {
         if (panelManager != null)
             panelManager.ShowPartDetailPanel();
-        var partPanel = FindFirstObjectByType<PartDetailPanelController>();
+        var partPanel = FindObjectOfType<PartDetailPanelController>();
         if (partPanel != null)
             partPanel.SetPartDetail(partNumber, description);
     }
@@ -81,7 +89,7 @@ public class ObjectPanelController : MonoBehaviour
         }
         
         // Buscar y limpiar el ObjectInfoRaycast actual
-        var infoRaycast = FindFirstObjectByType<ObjectInfoRaycast>();
+        var infoRaycast = FindObjectOfType<ObjectInfoRaycast>();
         if (infoRaycast != null)
         {
             infoRaycast.ClearInspection();
