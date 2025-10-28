@@ -1,27 +1,15 @@
 using UnityEngine;
 
-/// <summary>
-/// Control de cámara 360 con sistema de retícula dinámico
-/// COMPORTAMIENTO DINÁMICO:
-/// - PC/Editor: Rotación libre en cualquier parte de la pantalla
-/// - Móviles nativos: Rotación libre en cualquier parte de la pantalla
-/// - WebGL con touch activo: Solo rotación fuera del radio de la retícula central
-/// - WebGL sin touch (PC en navegador): Rotación libre en cualquier parte de la pantalla
-/// </summary>
 public class CameraLook360 : MonoBehaviour
 {
     public float sensitivity = 2.0f;
     [Header("Configuración de Retícula")]
     public float reticleRadius = 50f; // Radio en píxeles desde el centro (debe coincidir con ObjectInfoRaycast)
-    [Header("Info - Solo Lectura")]
-    [SerializeField] private bool reticleSystemActive = false; // Solo para mostrar en Inspector
     
     private float rotationY = 0f;
     private float rotationX = 0f;
     private bool canRotateCamera = false; // Para saber si podemos rotar la cámara
     private Vector2 initialClickPosition;
-
-    // La lógica de retícula se maneja dinámicamente según el input actual
 
     // Verificar si la posición del click está fuera del radio de la retícula
     private bool IsClickOutsideReticle(Vector2 inputPosition)
@@ -37,10 +25,10 @@ public class CameraLook360 : MonoBehaviour
         if (ObjectInfoRaycast.isInspecting)
             return;
 
-        // Sistema simplificado según input actual
+        // Sistema unificado para todas las plataformas
         bool inputHandled = false;
         
-        // Manejo para touch (móviles, tablets)
+        // Manejo prioritario para touch (móviles, tablets)
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
@@ -48,15 +36,8 @@ public class CameraLook360 : MonoBehaviour
             if (touch.phase == TouchPhase.Began)
             {
                 initialClickPosition = touch.position;
-                #if UNITY_WEBGL
-                // En WebGL con touch activo, usar sistema de retícula
+                // Solo permitir rotación si el toque inicial está fuera del radio de la retícula
                 canRotateCamera = IsClickOutsideReticle(initialClickPosition);
-                reticleSystemActive = true;
-                #else
-                // Móviles nativos - siempre permitir rotación
-                canRotateCamera = true;
-                reticleSystemActive = false;
-                #endif
             }
             
             if (canRotateCamera && touch.phase == TouchPhase.Moved)
@@ -81,23 +62,15 @@ public class CameraLook360 : MonoBehaviour
             inputHandled = true;
         }
         
-        // Si no hay touch input, usar mouse
+        // Si no hay touch input, usar mouse (PC, WebGL)
         if (!inputHandled)
         {
             // Verificar el inicio del click
             if (Input.GetMouseButtonDown(0))
             {
                 initialClickPosition = Input.mousePosition;
-                
-                #if UNITY_WEBGL
-                // En WebGL sin touch activo (PC), permitir rotación libre
-                canRotateCamera = true;
-                reticleSystemActive = false;
-                #else
-                // PC/Editor - siempre permitir rotación libre
-                canRotateCamera = true;
-                reticleSystemActive = false;
-                #endif
+                // Solo permitir rotación si el click inicial está fuera del radio de la retícula
+                canRotateCamera = IsClickOutsideReticle(initialClickPosition);
             }
 
             // Solo rotar si tenemos permiso y estamos manteniendo el click
