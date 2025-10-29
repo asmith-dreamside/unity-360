@@ -157,4 +157,6 @@ public class PanelManager : MonoBehaviour
                 text.text = locationName;
         }
     }
+
+    // La funcionalidad de preguntas ahora se maneja en Manager.cs
 }

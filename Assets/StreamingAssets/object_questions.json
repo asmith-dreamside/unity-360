@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "¿Qué tipo de extintor es este?",
+            "options": [
+                "Extintor tipo ABC (Polvo Químico Seco)",
+                "Extintor tipo K (Aceites)",
+                "Extintor tipo A (Agua)",
+                "Extintor tipo D (Metales)"
+            ],
+            "answer": 0,
+            "objectName": "Extintor"
+        },
+        {
+            "question": "¿Cuál es el primer paso para usar este extintor?",
+            "options": [
+                "Apuntar a la base del fuego",
+                "Quitar el seguro",
+                "Presionar la palanca",
+                "Agitar el extintor"
+            ],
+            "answer": 1,
+            "objectName": "Extintor"
+        },
+        {
+            "question": "¿A qué distancia mínima debemos mantener del fuego al usar este extintor?",
+            "options": [
+                "0.5 metros",
+                "1.5 metros",
+                "3 metros",
+                "5 metros"
+            ],
+            "answer": 2,
+            "objectName": "Extintor"
+        },
+        {
+            "question": "¿Qué significa la letra 'A' en un extintor ABC?",
+            "options": [
+                "Fuegos de líquidos inflamables",
+                "Fuegos eléctricos",
+                "Fuegos de materiales sólidos",
+                "Fuegos de metales"
+            ],
+            "answer": 2,
+            "objectName": "Extintor"
+        },
+        {
+            "question": "¿Cuál es la técnica correcta para extinguir un fuego con este extintor?",
+            "options": [
+                "Movimiento circular",
+                "Movimiento de arriba a abajo",
+                "Movimiento de zigzag",
+                "Movimiento de lado a lado en forma de barrido"
+            ],
+            "answer": 3,
+            "objectName": "Extintor"
+        }
+    ]
+}

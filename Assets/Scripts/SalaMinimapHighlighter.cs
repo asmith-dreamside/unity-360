@@ -14,37 +14,61 @@ public class SalaMinimapHighlighter : MonoBehaviour
 
     void Update()
     {
-        if (mainCamera == null || salas == null || minimapIcons == null) return;
-        if (salas.Count != minimapIcons.Count) return;
-
-        int closestIdx = -1;
-        float minDist = float.MaxValue;
-        Vector3 camPos = mainCamera.transform.position;
-
-        // Buscar la sala más cercana
-        for (int i = 0; i < salas.Count; i++)
+        try
         {
-            float dist = Vector3.Distance(camPos, salas[i].transform.position);
-            if (dist < minDist)
+            // Verificar referencias nulas
+            if (mainCamera == null || salas == null || minimapIcons == null || locationText == null)
             {
-                minDist = dist;
-                closestIdx = i;
-                
+                return;
+            }
+
+            // Verificar listas vacías o desiguales
+            if (salas.Count == 0 || minimapIcons.Count == 0 || salas.Count != minimapIcons.Count)
+            {
+                return;
+            }
+
+            int closestIdx = -1;
+            float minDist = float.MaxValue;
+            Vector3 camPos = mainCamera.transform.position;
+
+            // Buscar la sala más cercana
+            for (int i = 0; i < salas.Count; i++)
+            {
+                if (salas[i] == null) continue;
+
+                float dist = Vector3.Distance(camPos, salas[i].transform.position);
+                if (dist < minDist)
+                {
+                    minDist = dist;
+                    closestIdx = i;
+                }
+            }
+
+            // Actualizar colores de los íconos RawImage y el texto
+            if (closestIdx >= 0 && closestIdx < salas.Count)
+            {
+                for (int i = 0; i < minimapIcons.Count; i++)
+                {
+                    if (minimapIcons[i] != null)
+                    {
+                        minimapIcons[i].color = (i == closestIdx) ? highlightColor : defaultColor;
+                    }
+                }
+
+                if (salas[closestIdx] != null)
+                {
+                    string nombreSala = salas[closestIdx].salaName;
+                    if (!string.IsNullOrEmpty(nombreSala))
+                    {
+                        locationText.text = nombreSala;
+                    }
+                }
             }
         }
-
-        // Actualizar colores de los íconos RawImage
-        for (int i = 0; i < minimapIcons.Count; i++)
+        catch (System.Exception e)
         {
-            if (minimapIcons[i] != null)
-            {
-                minimapIcons[i].color = (i == closestIdx) ? highlightColor : defaultColor;
-                string nombreSala = salas[closestIdx].salaName;
-                locationText.text = nombreSala;
-                
-            }
+            Debug.LogError($"Error en SalaMinimapHighlighter: {e.Message}");
         }
-
-        
     }
 }

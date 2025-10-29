@@ -1,14 +1,52 @@
 {
   "questions": [
     {
-      "question": "¿Cuál es la capital de Francia?",
-      "options": ["Madrid", "París", "Roma", "Berlín"],
-      "answer": 1
+      "question": "¿Qué equipo de seguridad es obligatorio en esta sala?",
+      "options": ["Casco de seguridad", "Guantes y botas", "Protección auditiva", "Todo lo anterior"],
+      "answer": 3,
+      "sala": "Sala de Máquinas"
     },
     {
-      "question": "¿Cuánto es 2 + 2?",
-      "options": ["3", "4", "5", "6"],
-      "answer": 1
+      "question": "¿Cuál es el protocolo correcto en esta área?",
+      "options": ["Trabajar solo", "Notificar al supervisor antes de entrar", "Ignorar las señales", "Correr en caso de emergencia"],
+      "answer": 1,
+      "sala": "Sala Desarrollo"
+    },
+    {
+      "question": "¿Qué tipo de material se almacena principalmente aquí?",
+      "options": ["Documentos", "Materiales peligrosos", "Herramientas", "Equipos electrónicos"],
+      "answer": 2,
+      "sala": "Almacén"
+    },
+    {
+      "question": "¿Cuál es la temperatura ideal para esta sala?",
+      "options": ["15-20°C", "20-25°C", "25-30°C", "30-35°C"],
+      "answer": 1,
+      "sala": "Almacén"
+    },
+    {
+      "question": "¿Qué acción está prohibida en esta área?",
+      "options": ["Usar el teléfono", "Tomar notas", "Comer o beber", "Hablar con compañeros"],
+      "answer": 2,
+      "sala": "Laboratorio"
+    },
+    {
+      "question": "¿Cuál es el primer paso al entrar a esta sala?",
+      "options": ["Encender las luces", "Registrarse en la bitácora", "Ponerse el equipo de seguridad", "Revisar la temperatura"],
+      "answer": 2,
+      "sala": "Laboratorio"
+    },
+    {
+      "question": "¿Qué hacer en caso de emergencia en esta área?",
+      "options": ["Salir corriendo", "Usar el extintor más cercano", "Seguir el protocolo de evacuación", "Llamar al supervisor"],
+      "answer": 2,
+      "sala": "Sala de Control"
+    },
+    {
+      "question": "¿Cada cuánto se debe realizar la inspección de equipos en esta sala?",
+      "options": ["Diariamente", "Semanalmente", "Mensualmente", "Anualmente"],
+      "answer": 0,
+      "sala": "Sala de Control"
     }
   ]
 }
